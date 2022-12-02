@@ -26,6 +26,12 @@ const draw = {
   C: "Z",
 };
 
+const lost = {
+  A: "Z",
+  B: "X",
+  C: "Y",
+};
+
 const scoreForShape = {
   X: 1,
   Y: 2,
@@ -40,25 +46,18 @@ const points = {
 
 let r = lines.map((line) => line.split(" "));
 
-console.log("r", r);
-
 r = r.map((line) => {
   const enemy = line[0];
-  const me = line[1];
+  const wantedResult = line[1];
 
-  if (win[enemy] === me) {
-    return points["win"] + scoreForShape[me];
-  }
+  const result =
+    wantedResult === "X" ? "lost" : wantedResult === "Y" ? "draw" : "win";
 
-  if (draw[enemy] === me) {
-    return points["draw"] + scoreForShape[me];
-  }
-
-  return points["lost"] + scoreForShape[me];
+  const pointMap = result === "win" ? win : result === "draw" ? draw : lost;
+  return points[result] + scoreForShape[pointMap[enemy]];
 });
 
 console.log("r", r);
-
 r = r.reduce((acc, cur) => acc + cur, 0);
 
 console.log("r", r);
