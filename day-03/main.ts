@@ -1,5 +1,5 @@
 import { readLines } from "https://deno.land/std@0.166.0/io/buffer.ts";
-import * as m from "https://deno.land/std@0.166.0/collections/mod.ts";
+import * as mod from "https://deno.land/std@0.166.0/collections/mod.ts";
 import { assert } from "https://deno.land/std@0.166.0/_util/asserts.ts";
 
 async function readLinesFromFile() {
@@ -13,7 +13,9 @@ async function readLinesFromFile() {
   return list;
 }
 
-const rucksacks = await readLinesFromFile();
+let r = await readLinesFromFile();
+
+r = mod.chunk(r, 3);
 
 const ASCII_CODE_LOWER_A = 97;
 const ASCII_CODE_A = 65;
@@ -26,23 +28,17 @@ function points(char: string) {
   return char.charCodeAt(0) - ASCII_CODE_A + 27;
 }
 
-let r = rucksacks.map((rucksack) => {
-  return [
-    rucksack.slice(0, rucksack.length / 2),
-    rucksack.slice(rucksack.length / 2),
-  ];
-});
-
 r = r.reduce((acc, curr) => {
   const firstComp = curr[0].split("");
   const secondComp = curr[1].split("");
+  const thirdComp = curr[2].split("");
 
   const foundDuplicate = firstComp.reduce((acc, char) => {
     if (acc !== null) {
       return acc;
     }
 
-    if (secondComp.includes(char)) {
+    if (secondComp.includes(char) && thirdComp.includes(char)) {
       return char;
     }
 
