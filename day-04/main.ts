@@ -24,11 +24,7 @@ r = r.map((l) => {
   const first = l[0];
   const second = l[1];
 
-  if (first[0] <= second[0] && first[1] >= second[1]) {
-    return true;
-  }
-
-  if (second[0] <= first[0] && second[1] >= first[1]) {
+  if (second[0] <= first[1] && second[1] >= first[0]) {
     return true;
   }
 
@@ -36,6 +32,7 @@ r = r.map((l) => {
 });
 
 console.log("r", r);
+
 r = r.reduce((acc, curr) => acc + (curr ? 1 : 0), 0);
 
 console.log("r", r);
