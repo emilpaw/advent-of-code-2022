@@ -88,7 +88,7 @@ s = arrangements.reduce((stacks, curr) => {
   const newStackState = {
     ...stacks,
     [curr.from]: fromStack.slice(0, fromStack.length - curr.amount),
-    [curr.to]: [...toStack, ...crates.toReversed()],
+    [curr.to]: [...toStack, ...crates],
   };
 
   console.log(`After moving the stacks looks like:`);
