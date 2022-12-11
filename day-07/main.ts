@@ -168,8 +168,13 @@ function findDirectories(node: DirNode) {
 
 findDirectories(root);
 
-let r = allDirectories
-  .filter((dir) => dir.size <= 100000)
-  .reduce((prev, curr) => prev + curr.size, 0);
+const usedSpace = root.size;
+const currentlyUnusedSpace = 70000000 - usedSpace;
+const neededAdditionalSpace = 30000000 - currentlyUnusedSpace;
 
-console.log("r", r);
+let r = allDirectories
+  .toSorted()
+  .reverse()
+  .find((dir) => dir.size >= neededAdditionalSpace);
+
+console.log("r", r.size);
