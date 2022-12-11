@@ -4,46 +4,52 @@ let input = await readInput();
 
 type Tree = {
   height: number;
-  visible: boolean;
+  scenicScore: number;
 };
 
 let r = input
   .map((line) => line.split(""))
   .map((line) =>
-    line.map((tree) => ({ height: parseInt(tree), visible: false }))
+    line.map((tree) => ({ height: parseInt(tree), scenicScore: 1 }))
   );
 
-function rowVisibility(input: Tree[][]) {
+function countVisible(trees: Tree[], tree: Tree): number {
+  return trees.reduce(
+    (acc, currentTree) => {
+      if (acc.stop) {
+        return acc;
+      }
+
+      let stop = false;
+
+      if (currentTree.height >= tree.height) {
+        stop = true;
+      }
+
+      return { ...acc, visible: acc.visible + 1, stop };
+    },
+    { visible: 0, stop: false }
+  ).visible;
+}
+
+function rowVisibility(input: Tree[][]): Tree[][] {
   return input.map((line) => {
     return line.map((tree, index) => {
-      // visible from left
-      if (
-        !line
-          .slice(0, index)
-          .some((currentTree) => currentTree.height >= tree.height)
-      ) {
-        return { ...tree, visible: true };
-      }
+      const left = line.slice(0, index).toReversed();
+      const visibleFromLeft = countVisible(left, tree);
 
-      // visible from right
-      if (
-        !line
-          .slice(index + 1)
-          .some((currentTree) => currentTree.height >= tree.height)
-      ) {
-        return { ...tree, visible: true };
-      }
+      const right = line.slice(index + 1);
+      const visibleFromRight = countVisible(right, tree);
 
-      if (tree.visible === true) {
-        return tree;
-      }
-
-      return { ...tree, visible: false };
+      return {
+        ...tree,
+        scenicScore: tree.scenicScore * visibleFromLeft * visibleFromRight,
+      };
     });
   });
 }
 
-function swapXandY<T>(array: T[][]) {
+function swapXandY<T>(array: T[][]): T[][] {
   return array.reduce((acc, row, index) => {
     row.forEach((item, index2) => {
       if (!acc[index2]) {
@@ -58,20 +64,12 @@ function swapXandY<T>(array: T[][]) {
 // visible horizontally
 r = rowVisibility(r);
 
-r.reduce(
-  (acc, line) => acc + line.filter((tree) => tree.visible === true).length,
-  0
-);
-
 // swap X and Y so rows become columns
 r = swapXandY(r);
 
 // visible vertically
 r = rowVisibility(r);
 
-r = r.reduce(
-  (acc, line) => acc + line.filter((tree) => tree.visible === true).length,
-  0
-);
+r = r.flat().toSorted((a, b) => b.scenicScore - a.scenicScore)[0].scenicScore;
 
 console.log("r", r);
