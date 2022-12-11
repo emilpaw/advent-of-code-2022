@@ -8,7 +8,7 @@ console.log("input", input);
 
 let r = input[0].split("").map((value, index) => [value, index + 1]);
 
-r = mod.slidingWindows(r, 4).reduce((acc, curr) => {
+r = mod.slidingWindows(r, 14).reduce((acc, curr) => {
   const values = curr.map((value) => value[0]);
 
   if (acc !== undefined) {
@@ -20,4 +20,4 @@ r = mod.slidingWindows(r, 4).reduce((acc, curr) => {
   }
 }, undefined);
 
-console.log("r", r[3][1]);
+console.log("r", r[13][1]);
